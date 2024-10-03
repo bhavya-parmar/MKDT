@@ -1,0 +1,104 @@
+Evaluate for train_CIFAR100_high_loss_5pct.pkl_None
+Files already downloaded and verified
+Files already downloaded and verified
+Test training data:  10000
+num_images: 2500
+512
+0.1
+torch.Size([10000, 8192])
+torch.Size([10000])
+
+L2 Regularization weight: 0.001
+rd_loss None
+rd_acc 7.21
+find ckpt_dir/train_CIFAR100_high_loss_5pct.pkl_None_pre_epoch_20_0_CIFAR100_ConvNet_1000_0.1_final_full.pt
+torch.Size([10000, 8192])
+torch.Size([10000])
+
+L2 Regularization weight: 0.001
+final_loss None
+final_acc 10.46
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Test training data:  5000
+num_images: 2500
+512
+0.1
+torch.Size([5000, 2048])
+torch.Size([5000])
+
+L2 Regularization weight: 0.001
+rd_loss None
+rd_acc 20.78
+find ckpt_dir/train_CIFAR100_high_loss_5pct.pkl_None_pre_epoch_20_0_CIFAR100_ConvNet_1000_0.1_final_full.pt
+torch.Size([5000, 2048])
+torch.Size([5000])
+
+L2 Regularization weight: 0.001
+final_loss None
+final_acc 25.52
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Test training data:  5000
+num_images: 2500
+512
+0.1
+torch.Size([5000, 2048])
+torch.Size([5000])
+
+L2 Regularization weight: 0.001
+rd_loss None
+rd_acc 50.22
+find ckpt_dir/train_CIFAR100_high_loss_5pct.pkl_None_pre_epoch_20_0_CIFAR100_ConvNet_1000_0.1_final_full.pt
+torch.Size([5000, 2048])
+torch.Size([5000])
+
+L2 Regularization weight: 0.001
+final_loss None
+final_acc 54.09
+Files already downloaded and verified
+Files already downloaded and verified
+Test training data:  666
+num_images: 2500
+512
+0.1
+torch.Size([666, 2048])
+torch.Size([666])
+
+L2 Regularization weight: 0.001
+rd_loss None
+rd_acc 7.740774077407741
+find ckpt_dir/train_CIFAR100_high_loss_5pct.pkl_None_pre_epoch_20_0_CIFAR100_ConvNet_1000_0.1_final_full.pt
+torch.Size([666, 2048])
+torch.Size([666])
+
+L2 Regularization weight: 0.001
+final_loss None
+final_acc 8.730873087308732
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified
+Test training data:  599
+num_images: 2500
+512
+0.1
+torch.Size([599, 2048])
+torch.Size([599])
+
+L2 Regularization weight: 0.001
+rd_loss None
+rd_acc 2.347255781843286
+find ckpt_dir/train_CIFAR100_high_loss_5pct.pkl_None_pre_epoch_20_0_CIFAR100_ConvNet_1000_0.1_final_full.pt
+torch.Size([599, 2048])
+torch.Size([599])
+
+L2 Regularization weight: 0.001
+final_loss None
+final_acc 3.4518467380048325
+Files already downloaded and verified
+Files already downloaded and verified
