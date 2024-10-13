@@ -6,7 +6,6 @@ from torch.utils.data import Subset
 from tqdm import tqdm
 from utils import get_dataset, get_network, get_daparam, TensorDataset, epoch, ParamDiffAug
 import copy
-from bt_model import BTModel
 import pickle 
 
 import warnings
@@ -14,15 +13,10 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 def main(args):
 
-    args.dsa = True if args.dsa == 'True' else False
     args.device = f'cuda:{args.device}' if torch.cuda.is_available() else 'cpu'
-    args.dsa_param = ParamDiffAug()
-
     print(args.run_id)
     
     channel, im_size, _, dst_train, dst_test, args.zca_trans = get_dataset(args.dataset, args.data_path, args.batch_real, args.subset, args=args, set_seed=False)
-    
-    # print('\n================== Exp %d ==================\n '%exp)
     print('Hyper-parameters: \n', args.__dict__)
 
     save_dir = os.path.join(args.buffer_path, args.dataset)
@@ -119,7 +113,7 @@ def main(args):
         for e in range(args.train_epochs):
 
             train_loss = epoch("train", dataloader=trainloader, net=teacher_net, optimizer=teacher_optim,
-                                        criterion=criterion, args=args, aug=True if args.enable_aug else False)
+                                        criterion=criterion, args=args)
 
             #test_loss = epoch("test", dataloader=testloader, net=teacher_net, optimizer=None,
             #                            criterion=criterion, args=args, aug=False)

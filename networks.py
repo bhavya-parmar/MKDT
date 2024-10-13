@@ -523,7 +523,7 @@ class ResNetImageNet(nn.Module):
 def ResNet10(channel, num_classes):
     return ResNet(BasicBlock, [1,1,1,1], channel=channel, num_classes=num_classes, norm='batchnorm')
 
-def ResNet18(channel, num_classes):
+def ResNet18(channel, num_classes): # Batchnorm Added
     return ResNet(BasicBlock, [2,2,2,2], channel=channel, num_classes=num_classes, norm='batchnorm')
 
 def ResNet34(channel, num_classes):
