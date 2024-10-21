@@ -25,12 +25,13 @@ def main(args):
 
     labels_all = []
     print(images_all.shape)
+    # The below code is to get target representation using a model pretrained with barlow twins provided by KRRST (https://github.com/db-Lee/selfsup_dd)
     target_model = resnet18()
     target_model.fc = nn.Identity()
     target_model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=2, bias=False)
     target_model.maxpool = nn.Identity()
     target_model = target_model.to(args.device)    
-    checkpoint = torch.load(f"/home/jennyni/teacher_ckpt/barlow_twins_resnet18_{args.dataset.lower()}.pt", map_location="cpu")
+    checkpoint = torch.load(f"/home/jennyni/teacher_ckpt/barlow_twins_resnet18_{args.dataset.lower() if args.dataset != 'Tiny' else 'tinyimagenet'}.pt", map_location="cpu")
 
     keys_to_remove = ["fc.weight", "fc.bias"]
     for key in keys_to_remove:
@@ -51,7 +52,7 @@ def main(args):
     print("train label shape", labels_all.shape)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Parameter Processing')
+    parser = argparse.ArgumentParser(description='Get Target Representation Parameter Processing')
     parser.add_argument('--dataset', type=str, default='CIFAR100', help='dataset')
     parser.add_argument('--data_path', type=str, default='/home/data', help='dataset path')
     parser.add_argument('--result_dir', type=str, default='target_rep_krrst_original_test', help='dataset path')

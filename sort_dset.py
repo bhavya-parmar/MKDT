@@ -49,7 +49,7 @@ def main(args):
         param_all = torch.load(checkpoint_path)
         last_checkpoint = param_all[0][-1] 
         # # Change to use the first epoch
-        # last_checkpoint = param_all[0][0]
+        # last_checkpoint = param_all[0][1]
         last_checkpoint = torch.cat([p.data.to(args.device).reshape(-1) for p in last_checkpoint], 0)
 
         teacher_net = get_network(args.model, channel, labels_all.shape[1], im_size).to(args.device)

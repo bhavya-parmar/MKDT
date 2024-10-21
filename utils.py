@@ -314,9 +314,9 @@ def get_time():
     return str(time.strftime("[%Y-%m-%d %H:%M:%S]", time.localtime()))
 
 
-def epoch(mode, dataloader, net, optimizer, criterion, args):
+def epoch(mode, dataloader, net, optimizer, criterion, device):
     loss_avg, num_exp = 0, 0
-    net = net.to(args.device)
+    net = net.to(device)
     
     desc = "Training"
     if mode == 'train':
@@ -325,9 +325,9 @@ def epoch(mode, dataloader, net, optimizer, criterion, args):
         desc = "Evaluating"
         net.eval()
 
-    for i_batch, datum in tqdm.tqdm(enumerate(dataloader), total=len(dataloader), desc=desc):
-        img = datum[0].float().to(args.device)
-        lab = datum[1].float().to(args.device)
+    for _, datum in tqdm.tqdm(enumerate(dataloader), total=len(dataloader), desc=desc):
+        img = datum[0].float().to(device)
+        lab = datum[1].float().to(device)
         n_b = lab.shape[0]
 
         output = net(img)
