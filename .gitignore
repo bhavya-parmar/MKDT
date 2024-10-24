@@ -10,8 +10,4 @@ docs/
 *pt
 logged_files/
 target_rep/
-zca/
 experiment_results/
-
-data_load.py
-investigate.ipynb

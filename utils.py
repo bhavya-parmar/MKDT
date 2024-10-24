@@ -7,13 +7,14 @@ import torch.nn as nn
 import os
 import pandas as pd
 import tqdm
-from torch.utils.data import Dataset
+import copy
+import pickle
+from torch.utils.data import Dataset, Subset
 from networks import MLP, ConvNet, LeNet, AlexNet, VGG11BN, VGG11, ResNet18, ResNet18BN_AP, ResNet18_AP, ResNet10
 from PIL import Image
 from more_dataset import Aircraft, Cub2011, Dogs
 from torchvision import transforms
 from torchvision import datasets as torchvision_datasets
-
 
 class ImageNet(torch.utils.data.Dataset):
     def __init__(self, root: str, split: str, transform=None):
@@ -172,6 +173,43 @@ def get_indices_per_class(dataset, epc):
     
     return sampled_indices
 
+def build_trainset(dataset, dst_train, train_labels_path, channel, batch_train, distill_idx=None):
+    # Organize real datasets (images and the target representation)
+    images_all = None
+    
+    print("BUILDING TRAINSET")
+    
+    if dataset != "ImageNet":
+        images_all = []
+        for i in tqdm.tqdm(range(len(dst_train))):
+            sample = dst_train[i]
+            images_all.append(torch.unsqueeze(sample[0], dim=0))
+
+        images_all = torch.cat(images_all, dim=0).to("cpu")
+
+    labels_all = torch.load(train_labels_path, map_location="cpu").to("cpu")
+    print("train label shape", labels_all.shape)
+    
+    for ch in range(channel):
+        print('real images channel %d, mean = %.4f, std = %.4f'%(ch, torch.mean(images_all[:, ch]), torch.std(images_all[:, ch])))
+        
+    if dataset != "ImageNet":
+        dst_train = TensorDataset(copy.deepcopy(images_all.detach()), copy.deepcopy(labels_all.detach()))
+    else:
+        dst_train = TensorDatasetWrapper(dst_train, copy.deepcopy(labels_all.detach()))
+    
+    # Subset using Distill idx if specified 
+    if distill_idx is not None:
+        with open(distill_idx, "rb") as f:
+            distill_idx = pickle.load(f)
+            dst_train = Subset(dst_train, indices=distill_idx)
+
+    trainloader = torch.utils.data.DataLoader(dst_train, batch_size=batch_train, shuffle=True, num_workers=4, pin_memory=True)
+    
+    print("Dataset creation complete")
+
+    return trainloader, labels_all
+
 class TensorDataset(Dataset):
     def __init__(self, images, labels): # images: n x c x h x w tensor
         self.images = images.detach().float()
@@ -182,6 +220,17 @@ class TensorDataset(Dataset):
 
     def __len__(self):
         return self.images.shape[0]
+
+class TensorDatasetWrapper(Dataset):
+    def __init__(self, img_dataset, labels): # images: n x c x h x w tensor
+        self.img_dataset = img_dataset
+        self.labels = labels.detach().float()
+
+    def __getitem__(self, index):
+        return self.img_dataset[index][0], self.labels[index]
+
+    def __len__(self):
+        return len(self.img_dataset)
 
 
 class SoftLabelDataset(torch.utils.data.Dataset):

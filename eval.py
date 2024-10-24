@@ -10,8 +10,8 @@ from torch.utils.data import TensorDataset, DataLoader
 from torchvision.utils import make_grid
 from utils import get_dataset, get_network, SoftLabelDataset, ParamDiffAug
 from pretrain_methods import pretrain_dc, pretrain_frepo, pretrain_mse
-from linear_evaluation import le_run
-from linear_eval_sgd import linear_sgd_run
+from evaluation.linear_evaluation import le_run
+from evaluation.linear_eval_sgd import linear_sgd_run
 from full_finetune import ft_run
 
 def aggregate_results(results):

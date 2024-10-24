@@ -2,11 +2,7 @@ import os
 import argparse
 import torch
 import torch.nn as nn
-from torch.utils.data import Subset
-from tqdm import tqdm
-from utils import get_dataset, get_network, TensorDataset, epoch
-import copy
-import pickle
+from utils import get_dataset, get_network, epoch, build_trainset
 
 def main(args):
 
@@ -22,33 +18,11 @@ def main(args):
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
 
-
-    # Organize real datasets (images and the target representation)
-    # TODO: fast loading of imagenet
-    images_all = []
-    
-    print("BUILDING TRAINSET")
-    for i in tqdm(range(len(dst_train))):
-        sample = dst_train[i]
-        images_all.append(torch.unsqueeze(sample[0], dim=0))
-
-    images_all = torch.cat(images_all, dim=0).to("cpu")
-    labels_all = torch.load(args.train_labels_path, map_location="cpu")
-    print("train label shape", labels_all.shape)
-    
-    for ch in range(channel):
-        print('real images channel %d, mean = %.4f, std = %.4f'%(ch, torch.mean(images_all[:, ch]), torch.std(images_all[:, ch])))
-
-    dst_train = TensorDataset(copy.deepcopy(images_all.detach()), copy.deepcopy(labels_all.detach()))
-    
-    # Subset using distill idx if specified 
-    if args.distill_idx is not None:
-        with open(args.distill_idx, "rb") as f:
-            distill_idx = pickle.load(f)
-            dst_train = Subset(dst_train, indices=distill_idx)
-
-    trainloader = torch.utils.data.DataLoader(dst_train, batch_size=args.batch_train, shuffle=True, num_workers=4, pin_memory=True)
-    print("Dataset creation complete")
+    trainloader, labels_all = build_trainset(dataset=args.dataset,
+                                 dst_train=dst_train,
+                                 train_labels_path=args.train_labels_path, 
+                                 channel=channel, 
+                                 batch_train=args.batch_train)
     
     # Loss function
     criterion = None
@@ -63,13 +37,6 @@ def main(args):
 
         # Sample model 
         teacher_net = get_network(args.model, channel, labels_all.shape[1], im_size).to(args.device) # get a random model
-
-        # random_net_path = f"ssd_{args.dataset}_net.pt"
-        # if os.path.exists(random_net_path):
-        #     print(f"find {random_net_path}")
-        #     teacher_net.load_state_dict(torch.load(random_net_path, map_location=args.device))
-        # else:
-        #     torch.save(teacher_net.state_dict(), random_net_path)
 
         if it == 0:
             print(teacher_net)
@@ -114,10 +81,9 @@ if __name__ == '__main__':
     parser.add_argument('--train_epochs', type=int, default=20)
     parser.add_argument('--mom', type=float, default=0.9, help='momentum')
     parser.add_argument('--l2', type=float, default=1e-4, help='l2 regularization')
-    parser.add_argument('--train_labels_path', type=str, default="/home/jennyni/ssl-mtt/target_rep_krrst_original/CIFAR100_resnet18_target_rep_train.pt")
+    parser.add_argument('--train_labels_path', type=str, default="/home/jennyni/MKDT/target_rep_krrst_original_test/CIFAR100_resnet18_target_rep_train.pt")
     parser.add_argument('--criterion', type=str, default="mse")
     parser.add_argument('--device', type=int, default=0, help='gpu number')
-    parser.add_argument('--distill_idx', type=str, default=None, help='path to indices to distill')
     
     args = parser.parse_args()
     main(args)
