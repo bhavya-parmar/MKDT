@@ -1,5 +1,5 @@
 # MKDT
-Code for [Dataset Distillation via Knowledge Distillation: Towards Efficient Self-Supervised Pre-training of Deep Networks]("https://arxiv.org/abs/2410.02116")
+Code for [Dataset Distillation via Knowledge Distillation: Towards Efficient Self-Supervised Pre-training of Deep Networks](https://arxiv.org/abs/2410.02116)
 
 ## Overview
 
