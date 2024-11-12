@@ -67,11 +67,31 @@ Run the following sripts to distill the dataset (SSL algorithm using barlow twin
 5 percent: `commands/distill/barlow_twins/Tiny/5_per.sh`
 
 
-
-
 ### 5. Evaluation.
 
+The following scripts contains the commands to run the evaluation for different subsets (e.g., MKDT, random, KRRST).
 
+Append `--subset_frac {0.01/0.05/0.1/0.5}` to the command to evaluate the datasets using different evaluation subset fractions
+
+**CIFAR 10** 
+
+2 percent: `commands/eval/c10_2per.sh --subset_frac {0.01/0.05/0.1/0.5}`
+
+5 percent: `commands/eval/c10_5per.sh --subset_frac {0.01/0.05/0.1/0.5}`
+
+**CIFAR 100**
+
+2 percent: `commands/eval/c100_2per.sh --subset_frac {0.01/0.05/0.1/0.5}`
+
+5 percent: `commands/eval/c100_5per.sh --subset_frac {0.01/0.05/0.1/0.5}`
+
+**Tiny ImageNet**
+
+2 percent: `commands/eval/tiny_2per.sh --subset_frac {0.01/0.05/0.1/0.5}`
+
+5 percent: `commands/eval/tiny_5per.sh --subset_frac {0.01/0.05/0.1/0.5}`
+
+You can visualize the tables comparing different subset results for a dataset using `commands/exp_plotting.ipynb`.
 
 
 ## Acknowledgement

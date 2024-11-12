@@ -92,7 +92,7 @@ def get_dataset(dataset, data_path, subset_size=None, epc=None, seed=None):
         mean = [0.4804, 0.5116, 0.5349]
         std = [0.2021, 0.1953, 0.2297]
 
-        # consistent as KRRST
+        # consistent with KRRST
         resize = lambda x: x if x.size[0] == 32 and x.size[1] == 32 else x.resize((32,32), Image.Resampling.LANCZOS)
         transform = transforms.Compose([resize, transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
         dst_train = Aircraft(data_path, train=True, download=True, transform=transform) 
@@ -105,7 +105,7 @@ def get_dataset(dataset, data_path, subset_size=None, epc=None, seed=None):
         mean = [0.4857, 0.4995, 0.4324]
         std = [0.2145, 0.2098, 0.2496]
 
-        # consistent as KRRST
+        # consistent with KRRST
         resize = lambda x: x if x.size[0] == 32 and x.size[1] == 32 else x.resize((32,32), Image.Resampling.LANCZOS)
         transform = transforms.Compose([resize, transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
         
@@ -119,7 +119,7 @@ def get_dataset(dataset, data_path, subset_size=None, epc=None, seed=None):
         mean = [0.4765, 0.4516, 0.3911]
         std = [0.2490, 0.2435, 0.2479]
 
-        # consistent as KRRST
+        # consistent with KRRST
         resize = lambda x: x if x.size[0] == 32 and x.size[1] == 32 else x.resize((32,32), Image.Resampling.LANCZOS)
         transform = transforms.Compose([resize, transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
 
@@ -133,7 +133,7 @@ def get_dataset(dataset, data_path, subset_size=None, epc=None, seed=None):
         mean = [0.4329, 0.3820, 0.2965]
         std = [0.2828, 0.2333, 0.2615]
 
-        # consistent as KRRST
+        # consistent with KRRST
         resize = lambda x: x if x.size[0] == 32 and x.size[1] == 32 else x.resize((32,32), Image.Resampling.LANCZOS)
         transform = transforms.Compose([resize, transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
 

@@ -1,8 +1,5 @@
 import torch
 import torch.nn as nn
-import warnings
-import types
-from collections import namedtuple
 from contextlib import contextmanager
 
 

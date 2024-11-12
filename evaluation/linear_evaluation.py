@@ -39,7 +39,6 @@ def train_clf(X, y, representation_dim, num_classes, device, reg_weight=1e-3, it
     return clf
 
 
-
 def test_clf(testloader, device, net, clf, feature=False):
     criterion = nn.CrossEntropyLoss()
     net.eval()
@@ -55,12 +54,9 @@ def test_clf(testloader, device, net, clf, feature=False):
             inputs, targets = inputs.to(device), targets.to(device)
             representation = None
             if feature:
-                # representation = net.features(inputs).view(-1, 2048)
                 representation = net.features(inputs).view(len(inputs), -1)
             else:
-                #representation = net.features(inputs).view(-1, 2048)
                 representation = net(inputs)
-            # test_repr_loss = criterion(representation, targets)
             raw_scores = clf(representation)
             clf_loss = criterion(raw_scores, targets)
             test_clf_loss += clf_loss.item()
@@ -92,37 +88,37 @@ def top5accuracy(output, target, topk=(5,)):
 
 
 def le_run(
-    args, device, 
+    train_model, 
+    channel,
+    num_classes,
+    img_size,
+    device, 
     init_model, 
-    dl_tr, dl_te
+    dl_tr, 
+    dl_te,
+    le_iters=20,
+    seed=0,
 ):  
 
     # set seed first 
 
-    random.seed(args.seed)
-    np.random.seed(args.seed)
-    torch.manual_seed(args.seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
     
-    zca = args.zca_trans is not None
-
-    """LINEAR EVALUATION"""
-
     # model
-    model = get_network(args.train_model, args.channel, args.num_classes, args.test_img_shape, fix_net=True).to(device)
+    model = get_network(train_model, channel, num_classes, img_size, fix_net=True).to(device)
     if hasattr(init_model, "classifier"):
         del init_model.classifier
     model.load_state_dict(init_model.state_dict(), strict=False)
     model.classifier = nn.Identity()
 
     # -------------------------------------------------------------------------------------------------------------------------------------------------------#
-
     """FEATURES"""
     Z = []
     Y = []
     with torch.no_grad():
         for X, y in tqdm(dl_tr, desc="encoding"):
-            if zca:
-                X = args.zca_trans(X)
             Z.append(model.features(X.to(device)).view(len(X), -1))
             Y.append(y.to(device))
     
@@ -131,9 +127,8 @@ def le_run(
     print(Z.shape)
     print(Y.shape)
     # -------------------------------------------------------------------------------------------------------------------------------------------------------#
-
     """LINEAR EVALUATION"""
-    clf = train_clf(Z, Y, Z.shape[1], args.num_classes, device, iter=20) # TODO: Change to 100
+    clf = train_clf(Z, Y, Z.shape[1], num_classes, device, iter=le_iters)
     acc, acc_per_point = test_clf(dl_te, device, model, clf, feature=True)
 
-    return None, acc
+    return acc
