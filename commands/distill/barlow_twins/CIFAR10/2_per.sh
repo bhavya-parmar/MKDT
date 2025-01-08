@@ -4,7 +4,7 @@ CUDA_VISIBLE_DEVICES=0 python distill.py \
   --dataset CIFAR10 \
   --model ConvNet \
   --iters 5000 \
-  --train_labels_path /home/jennyni/MKDT/target_rep_krrst_original_test/CIFAR10_resnet18_target_rep_train.pt \
+  --train_labels_path /home/jennyni/MKDT/target_rep/barlow_twins/CIFAR10_target_rep_train.pt \
   --expert_epochs 2 \
   --lr_img 1000 \
   --syn_steps 40 \

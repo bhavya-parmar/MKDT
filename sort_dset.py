@@ -11,12 +11,15 @@ import numpy as np
 
 def main(args):
     channel, im_size, _, dst_train, _ = get_dataset(dataset=args.dataset, data_path=args.data_path)
+    train_labels_path = f"/home/jennyni/MKDT/target_rep/{args.ssl_algo}/{args.dataset}_target_rep_train.pt"
 
     trainloader, labels_all = build_trainset(dataset=args.dataset,
                                  dst_train=dst_train,
-                                 train_labels_path=args.train_labels_path, 
+                                 train_labels_path=train_labels_path, 
                                  channel=channel, 
-                                 batch_train=args.batch_train)
+                                 batch_train=args.batch_train,
+                                 shuffle=False
+                                )
     epoch_losses = {}
 
     num_examples = len(trainloader.dataset)
@@ -76,10 +79,9 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', type=str, default='CIFAR100', help='dataset')
     parser.add_argument('--model', type=str, default='ConvNet', help='model')
     parser.add_argument('--num_buffers', type=int, default=100, help='number of buffers')
-    parser.add_argument('--ssl_algo', type=str, default="barlow_twins", help='Algorithm to train the SSL')
+    parser.add_argument('--ssl_algo', type=str, default="barlow_twins", choices=['barlow_twins', 'simclr'], help='Algorithm to train the SSL')
     parser.add_argument('--batch_train', type=int, default=256, help='batch size for training networks')
     parser.add_argument('--data_path', type=str, default='/home/data', help='dataset path')
-    parser.add_argument('--train_labels_path', type=str, default="/home/jennyni/MKDT/target_rep_krrst_original_test/CIFAR100_resnet18_target_rep_train.pt")
     parser.add_argument('--device', type=int, default=0, help='gpu number')
     args = parser.parse_args()
     main(args)

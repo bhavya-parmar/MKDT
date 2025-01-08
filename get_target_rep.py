@@ -20,22 +20,29 @@ def main(args):
 
     images_all = torch.cat(images_all, dim=0).to("cpu")
 
-    if not os.path.exists(args.result_dir):
-        os.makedirs(args.result_dir)
+    output_dir = os.path.join(args.result_dir, args.ssl_algorithm)
+    os.makedirs(output_dir, exist_ok=True)
 
     labels_all = []
     print(images_all.shape)
-    # The below code is to get target representation using a model pretrained with barlow twins provided by KRRST (https://github.com/db-Lee/selfsup_dd)
-    target_model = resnet18()
-    target_model.fc = nn.Identity()
-    target_model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=2, bias=False)
-    target_model.maxpool = nn.Identity()
-    target_model = target_model.to(args.device)    
-    checkpoint = torch.load(f"/home/jennyni/teacher_ckpt/barlow_twins_resnet18_{args.dataset.lower() if args.dataset != 'Tiny' else 'tinyimagenet'}.pt", map_location="cpu")
+    if args.ssl_algorithm == "barlow_twins":
+        # Get target representation using a model pretrained with barlow twins provided by KRRST (https://github.com/db-Lee/selfsup_dd)
+        target_model = resnet18()
+        target_model.fc = nn.Identity()
+        target_model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=2, bias=False)
+        target_model.maxpool = nn.Identity()
+        target_model = target_model.to(args.device)    
+        checkpoint = torch.load(f"/home/jennyni/krrst_teacher_ckpt/barlow_twins_resnet18_{args.dataset.lower() if args.dataset != 'Tiny' else 'tinyimagenet'}.pt", map_location="cpu")
+        keys_to_remove = ["fc.weight", "fc.bias"]
+        for key in keys_to_remove:
+            checkpoint.pop(key, None)
+    else:
+        # Get target representation using a model pretrained with SimCLR provided by SAS (https://github.com/BigML-CS-UCLA/sas-data-efficient-contrastive-learning)
+        from resnet import ResNet18, StemCIFAR
+        target_model = ResNet18(stem=StemCIFAR)
+        loaded_model = torch.load(f"/home/sjoshi/sas-data-efficient-contrastive-learning/{args.data_name}-resnet18-net.pt", map_location="cpu")
+        checkpoint = loaded_model.state_dict()
 
-    keys_to_remove = ["fc.weight", "fc.bias"]
-    for key in keys_to_remove:
-        checkpoint.pop(key, None) 
     target_model.load_state_dict(checkpoint)
     target_model.eval()
 
@@ -47,7 +54,7 @@ def main(args):
     
     labels_all = torch.cat(labels_all, dim=0)
 
-    torch.save(labels_all.detach().cpu(), f"{args.result_dir}/{args.dataset}_resnet18_target_rep_train.pt")
+    torch.save(labels_all.detach().cpu(), f"{args.result_dir}/{args.ssl_algorithm}/{args.dataset}_target_rep_train.pt")
 
     print("train label shape", labels_all.shape)
 
@@ -55,8 +62,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Get Target Representation Parameter Processing')
     parser.add_argument('--dataset', type=str, default='CIFAR100', help='dataset')
     parser.add_argument('--data_path', type=str, default='/home/data', help='dataset path')
-    parser.add_argument('--result_dir', type=str, default='target_rep_krrst_original_test', help='dataset path')
+    parser.add_argument('--result_dir', type=str, default='target_rep', help='dataset path')
     parser.add_argument('--device', type=int, default=0, help='gpu number')
+    parser.add_argument('--ssl_algorithm', type=str, default='barlow_twins', choices=['barlow_twins', 'simclr'], help='SSL Algorithm used to get the target representation.')
 
     args = parser.parse_args()
     main(args)

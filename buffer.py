@@ -22,7 +22,9 @@ def main(args):
                                  dst_train=dst_train,
                                  train_labels_path=args.train_labels_path, 
                                  channel=channel, 
-                                 batch_train=args.batch_train)
+                                 batch_train=args.batch_train,
+                                 shuffle=True
+                                )
     
     # Loss function
     criterion = None
@@ -81,7 +83,7 @@ if __name__ == '__main__':
     parser.add_argument('--train_epochs', type=int, default=20)
     parser.add_argument('--mom', type=float, default=0.9, help='momentum')
     parser.add_argument('--l2', type=float, default=1e-4, help='l2 regularization')
-    parser.add_argument('--train_labels_path', type=str, default="/home/jennyni/MKDT/target_rep_krrst_original_test/CIFAR100_resnet18_target_rep_train.pt")
+    parser.add_argument('--train_labels_path', type=str, required=True)
     parser.add_argument('--criterion', type=str, default="mse")
     parser.add_argument('--device', type=int, default=0, help='gpu number')
     

@@ -39,7 +39,6 @@ def main(args):
     print('Hyper-parameters: \n', args.__dict__)
 
     # Organize the Real Dataset
-    # TODO: Fast Loading of ImageNet
     ''' organize the real dataset '''
     
     images_all = []
@@ -144,7 +143,7 @@ def main(args):
             if file_idx == len(expert_files):
                 file_idx = 0
                 random.shuffle(expert_files)
-            print("loading file {}".format(expert_files[file_idx]))
+            # print("loading file {}".format(expert_files[file_idx]))
             random.shuffle(buffer)
 
         start_epoch = np.random.randint(0, args.max_start_epoch)
@@ -245,7 +244,7 @@ if __name__ == '__main__':
     
     parser.add_argument('--lr_labels', type=float, default=1, help='learning rate for updating labels')
     parser.add_argument('--image_init_idx_path', type=str, help='path to the initial images')
-    parser.add_argument('--train_labels_path', type=str, help='path to the target representation')
+    parser.add_argument('--train_labels_path', type=str, required=True, help='path to the target representation')
     parser.add_argument('--run_id', type=str, default=None, help='id for run')
     parser.add_argument('--expert_dir', type=str, help='dir for expert trajectories')
     parser.add_argument('--criterion', type=str, default="mse") # Should always use MSE

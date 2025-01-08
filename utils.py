@@ -56,8 +56,8 @@ def get_dataset(dataset, data_path, subset_size=None, epc=None, seed=None):
         mean = [0.485, 0.456, 0.406]
         std = [0.229, 0.224, 0.225]
         transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
-        dst_train = torchvision_datasets.ImageFolder(os.path.join(data_path + "/tiny-imagenet-200", "train"), transform=transform) # no augmentation
-        dst_test = torchvision_datasets.ImageFolder(os.path.join(data_path + "/tiny-imagenet-200", "val"), transform=transform)
+        dst_train = torchvision_datasets.ImageFolder(os.path.join(data_path + "/tiny_imagenet", "train"), transform=transform) # no augmentation
+        dst_test = torchvision_datasets.ImageFolder(os.path.join(data_path + "/tiny_imagenet", "val"), transform=transform)
 
 
     elif dataset == 'ImageNet':
@@ -173,7 +173,7 @@ def get_indices_per_class(dataset, epc):
     
     return sampled_indices
 
-def build_trainset(dataset, dst_train, train_labels_path, channel, batch_train, distill_idx=None):
+def build_trainset(dataset, dst_train, train_labels_path, channel, batch_train, distill_idx=None, shuffle=False):
     # Organize real datasets (images and the target representation)
     images_all = None
     
@@ -204,7 +204,7 @@ def build_trainset(dataset, dst_train, train_labels_path, channel, batch_train, 
             distill_idx = pickle.load(f)
             dst_train = Subset(dst_train, indices=distill_idx)
 
-    trainloader = torch.utils.data.DataLoader(dst_train, batch_size=batch_train, shuffle=True, num_workers=4, pin_memory=True)
+    trainloader = torch.utils.data.DataLoader(dst_train, batch_size=batch_train, shuffle=shuffle, num_workers=4, pin_memory=True)
     
     print("Dataset creation complete")
 

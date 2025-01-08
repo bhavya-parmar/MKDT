@@ -7,6 +7,7 @@ Code for [Dataset Distillation via Knowledge Distillation: Towards Efficient Sel
 
 ```
 git clone git@github.com:jiayini1119/MKDT.git
+conda activate mkdt
 pip install -r requirements.txt
 ```
 
@@ -14,11 +15,19 @@ pip install -r requirements.txt
 ## Commands to Run the Experiments
 
 ### 1. Train the Teacher Model Using SSL and Getting Target Representation.
-We obtained the teacher model trained with [Barlow Twins](https://arxiv.org/abs/2103.03230) using the checkpoint provided in the [KRRST](https://github.com/db-Lee/selfsup_dd). To get the target representation:
+#### For Barlow Twins:
+We obtained the teacher model trained with [Barlow Twins](https://arxiv.org/abs/2103.03230) using the checkpoint provided in the [KRRST](https://github.com/db-Lee/selfsup_dd). Download and save the checkpoints under the repository `/krrst_teacher_ckpt`.
+
+#### For SimCLR:
+We obtained the teacher model trained with [SimCLR](https://arxiv.org/abs/2002.05709) using the checkpoint provided in the [SAS](https://github.com/BigML-CS-UCLA/sas-data-efficient-contrastive-learning).
+
+To get the target representation:
 
 ```
-python get_target_rep.py --dataset {CIFAR10/CIFAR100/Tiny} --data_path {dataset path} --result_dir {directory to store the target representations} --device {device}
+python get_target_rep.py --dataset {CIFAR10/CIFAR100/Tiny} --model {model: ConvNetD4 for TinyImageNet and ConvNet for other datasets} --ssl_algorithm {barlow_twins/simclr} --data_path {dataset path} --result_dir {directory to store the target representations} --device {device}
 ```
+
+By default, the target representations will be saved in `/{result_dir}_{ssl_algorithm}/{dataset}_target_rep_train.pt`.
 
 
 ### 2. Get Expert Trajectories Using Knowledge Distillation.
@@ -41,7 +50,7 @@ python get_target_rep.py --dataset {CIFAR10/CIFAR100/Tiny} --data_path {dataset 
 For example, 
 
 ```
-python get_target_rep.py --dataset CIFAR100 --data_path /home/data --model ConvNet --num_buffers 100 --ssl_algo barlow_twins --train_labels_path target_rep_krrst_original_test/CIFAR100_resnet18_target_rep_train.pt
+python get_target_rep.py --dataset CIFAR100 --data_path /home/data --model ConvNet --num_buffers 100 --ssl_algo barlow_twins --train_labels_path /home/jennyni/MKDT/target_rep/barlow_twins/CIFAR100_target_rep_train.pt
 ```
 
 ### 4. Run Distillation.

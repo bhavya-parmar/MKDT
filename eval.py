@@ -191,7 +191,7 @@ if __name__ == '__main__':
     parser.add_argument('--test_dataset', type=str, default="CIFAR100")
 
     # Label
-    parser.add_argument('--label_path', type=str, default="/home/jennyni/ssl-mtt/target_rep_krrst_original/CIFAR100_resnet18_target_rep_train.pt")
+    parser.add_argument('--label_path', type=str, required=True)
 
     # Path for the subset / distilled data
     parser.add_argument('--subset_path', type=str, default=None)

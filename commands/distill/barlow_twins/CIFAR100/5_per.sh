@@ -1,10 +1,10 @@
 #!/bin/bash
 
-CUDA_VISIBLE_DEVICES=1 python distill.py \
+CUDA_VISIBLE_DEVICES=3 python distill.py \
   --dataset CIFAR100 \
   --model ConvNet \
   --iters 5000 \
-  --train_labels_path /home/jennyni/MKDT/target_rep_krrst_original_test/CIFAR100_resnet18_target_rep_train.pt \
+  --train_labels_path /home/jennyni/MKDT/target_rep/barlow_twins/CIFAR100_target_rep_train.pt \
   --expert_epochs 2 \
   --lr_img 10000 \
   --syn_steps 40 \
