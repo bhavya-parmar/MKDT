@@ -1,13 +1,28 @@
-# MKDT
+# MKDT (ICLR 2025)
 Code for [Dataset Distillation via Knowledge Distillation: Towards Efficient Self-Supervised Pre-training of Deep Networks](https://arxiv.org/abs/2410.02116)
 
 ## Overview
+Dataset distillation (DD) generates small synthetic datasets that can efficiently train
+deep networks with a limited amount of memory and compute. Despite the success
+of DD methods for supervised learning, DD for self-supervised pre-training of deep
+models has remained unaddressed. Pre-training on unlabeled data is crucial for
+efficiently generalizing to downstream tasks with limited labeled data. In this work,
+we propose the first effective DD method for SSL pre-training. First, we show,
+theoretically and empirically, that naïve application of supervised DD methods to
+SSL fails, due to the high variance of the SSL gradient. Then, we address this issue
+by relying on insights from knowledge distillation (KD) literature. Specifically, we
+train a small student model to match the representations of a larger teacher model
+trained with SSL. Then, we generate a small synthetic dataset by matching the
+training trajectories of the student models. As the KD objective has considerably
+lower variance than SSL, our approach can generate synthetic datasets that can
+successfully pre-train high-quality encoders. Through extensive experiments, we
+show that our distilled sets lead to up to 13% higher accuracy than prior work,
+on a variety of downstream tasks, in the presence of limited labeled data.
 
 ## Installation
 
 ```
 git clone git@github.com:jiayini1119/MKDT.git
-conda activate mkdt
 pip install -r requirements.txt
 ```
 
@@ -112,13 +127,10 @@ https://github.com/db-Lee/selfsup_dd
 
 ## BibTeX
 ```
-@misc{joshi2024datasetdistillationknowledgedistillation,
-      title={Dataset Distillation via Knowledge Distillation: Towards Efficient Self-Supervised Pre-Training of Deep Networks}, 
-      author={Siddharth Joshi and Jiayi Ni and Baharan Mirzasoleiman},
-      year={2024},
-      eprint={2410.02116},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2410.02116}, 
+@inproceedings{joshi2025kd,
+  title={Dataset Distillation via Knowledge Distillation: Towards Efficient Self-Supervised Pre-Training of Deep Networks},
+  author={Joshi, Siddharth and Ni, Jiayi and Mirzasoleiman, Baharan},
+  booktitle={Proceedings of the International Conference on Learning Representations (ICLR)},
+  year={2025}
 }
 ```
