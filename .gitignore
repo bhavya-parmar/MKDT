@@ -1,0 +1,13 @@
+.idea
+**/*.pyc
+buffers/
+wandb
+models/
+projection_heads
+docs/
+**/*.png
+*txt
+*pt
+logged_files/
+target_rep/
+experiment_results/
