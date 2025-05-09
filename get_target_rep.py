@@ -32,7 +32,7 @@ def main(args):
         target_model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=2, bias=False)
         target_model.maxpool = nn.Identity()
         target_model = target_model.to(args.device)    
-        checkpoint = torch.load(f"/home/jennyni/krrst_teacher_ckpt/barlow_twins_resnet18_{args.dataset.lower() if args.dataset != 'Tiny' else 'tinyimagenet'}.pt", map_location="cpu")
+        checkpoint = torch.load(f"/kaggle/input/mkdt-main/MKDT/krrst_teacher_ckpt/barlow_twins_resnet18_{args.dataset.lower() if args.dataset != 'Tiny' else 'tinyimagenet'}.pt", map_location="cpu")
         keys_to_remove = ["fc.weight", "fc.bias"]
         for key in keys_to_remove:
             checkpoint.pop(key, None)
